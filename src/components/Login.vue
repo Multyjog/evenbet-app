@@ -1,34 +1,55 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <h1>Login</h1>
 
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
-  </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <form @submit.prevent :onsubmit="onLogin" class="card form">
+    <input type="text" placeholder="Username" v-model="loginData.userName" />
+    <input
+      type="password"
+      name=""
+      id=""
+      placeholder="Password"
+      v-model="loginData.password"
+    />
+    <button type="submit">Login</button>
+  </form>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import apiClient from "../api-client";
+import { AxiosResponse } from "axios";
+import router from "../router";
 
-defineProps<{ msg: string }>();
+const loginData = ref({
+  userName: "",
+  password: "",
+});
 
-const count = ref(0);
+const onSuccessLogin = (res: AxiosResponse) => {
+  // localStorage.setItem("userId", res.data.data[0].id);
+  localStorage.setItem("authToken", res.data.data[0].attributes.token);
+  localStorage.setItem(
+    "refreshToken",
+    res.data.data[0].attributes["refresh-token"]
+  );
+  router.push({ name: "main" });
+};
+
+const onLogin = () => {
+  apiClient
+    .post("/login", {
+      login: loginData.value.userName,
+      password: loginData.value.password,
+    })
+    .then((res: AxiosResponse) => {
+      onSuccessLogin(res);
+    });
+};
 </script>
 
+<style scoped>
+.form {
+  display: flex;
+  gap: 10px;
+}
 </style>
