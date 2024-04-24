@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance } from "axios";
+import router from "./router";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: "https://poker.evenbetpoker.com/api/web/v2",
@@ -22,26 +23,29 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const errorResponse = error.response;
-    console.log("Orig request", originalRequest);
-    console.log("ERROR", errorResponse);
-
+    // Checking unathorized err
     if (errorResponse.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      try {
+        const newToken = await apiTokenRefreshClient
+          .post("/auth/token", {
+            refreshToken: localStorage.getItem("refreshToken"),
+          })
+          .then((res) => {
+            localStorage.setItem("authToken", res.data.token);
+            localStorage.setItem("refreshToken", res.data["refresh-token"]);
+            return res;
+          });
 
-      // Refresh the token
-      const newToken = await apiTokenRefreshClient
-        .post("/auth/token", {
-          refreshToken: localStorage.getItem("refreshToken"),
-        })
-        .then((res) => {
-          localStorage.setItem("authToken", res.data.token);
-          localStorage.setItem("refreshToken", res.data["refresh-token"]);
-          return res;
-        });
-
-      console.log("SETTING NEW TOKEN:", newToken);
-      originalRequest.params.auth = newToken;
-      return axios(originalRequest);
+        originalRequest.params.auth = newToken;
+        return axios(originalRequest);
+      } catch (refreshError: any) {
+        // Checking is refresh token expired
+        if (refreshError.response && refreshError.response.status === 422) {
+          localStorage.clear();
+          router.push({ path: `/${refreshError.response.status}` });
+        }
+      }
     }
     return Promise.reject(error);
   }

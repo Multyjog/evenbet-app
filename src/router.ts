@@ -10,7 +10,7 @@ import MainPage from "./components/MainPage.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/:error?",
     name: "login",
     component: LoginView,
     beforeEnter: (

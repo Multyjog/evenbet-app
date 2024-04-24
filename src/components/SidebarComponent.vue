@@ -1,6 +1,6 @@
 <template>
   <div class="avatar">
-    <img src="https://picsum.photos/200" alt="" />
+    <Avatar image="https://picsum.photos/200" size="xlarge" shape="circle" />
   </div>
   <br />
   <div class="balance" v-for="balance in balances" :key="balance.id">
@@ -13,21 +13,20 @@
 <script setup lang="ts">
 import { defineProps, PropType } from "vue";
 import { IFormattedBalance } from "../interfaces";
+import Avatar from "primevue/avatar";
 
 defineProps({
   balances: {
     type: Object as PropType<IFormattedBalance[]>,
-    required: true, // or false, depending on your needs
+    required: true,
   },
 });
 </script>
 
-<style>
+<style scoped>
 .avatar {
   display: flex;
-  padding: 10px;
-  border: 10px solid gray;
-  border-radius: 100%;
+  justify-content: center;
 }
 img {
   border-radius: 100%;

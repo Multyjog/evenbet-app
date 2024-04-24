@@ -15,16 +15,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import apiClient from "../api-client";
 import { AxiosResponse } from "axios";
 import router from "../router";
+import { useRoute } from "vue-router";
 
 const loginData = ref({
   userName: "",
   password: "",
 });
 
+const emit = defineEmits(["tokenIssueLogout"]);
+const route = useRoute();
+onMounted(() => {
+  if (route.params.error === "422") emit("tokenIssueLogout");
+});
 const onSuccessLogin = (res: AxiosResponse) => {
   // localStorage.setItem("userId", res.data.data[0].id);
   localStorage.setItem("authToken", res.data.data[0].attributes.token);
