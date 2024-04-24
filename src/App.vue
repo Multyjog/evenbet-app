@@ -20,4 +20,3 @@ const showWarning = () => {
 </script>
 
 <style scoped></style>
-<!-- TODO: DOCKER -->

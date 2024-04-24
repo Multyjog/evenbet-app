@@ -1,9 +1,10 @@
-# Vue 3 + TypeScript + Vite
+## Hello
+### This is my test project for evenbet employment
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-## Recommended Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
-
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+Steps to run the app:
+- Copy repo to your local machine
+- In the project folder, run:
+    ```docker build -t evenbet-app .```
+- Wait for image to build
+- Run:
+    ```docker run -p 8080:8080 evenbet-app```
