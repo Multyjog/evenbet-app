@@ -34,7 +34,7 @@ apiClient.interceptors.response.use(
           .then((res) => {
             localStorage.setItem("authToken", res.data.token);
             localStorage.setItem("refreshToken", res.data["refresh-token"]);
-            return res;
+            return res.data.token;
           });
 
         originalRequest.params.auth = newToken;

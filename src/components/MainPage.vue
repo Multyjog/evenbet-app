@@ -28,7 +28,6 @@ onMounted(() => {
       balances.value = formatBalances(res.data.data);
     });
   apiClient.get("/casino/games").then((res) => {
-    // console.log(res.data.data.slice(0, 20));
     games.value = res.data.data.slice(0, 20);
   });
 });
